@@ -11,6 +11,7 @@ spec:
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
+    tty: true
   - name: helm
     image: alpine/helm:3.12.3
     command:
