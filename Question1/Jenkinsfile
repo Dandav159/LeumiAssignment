@@ -9,20 +9,23 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: kaniko
-    image: gcr.io/kaniko-project/executor:latest
-    command:
-    - sleep
-    args:
-    - 99d
-    tty: true
+  - name: docker
+    image: docker:dind
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - name: docker-socket
+      mountPath: /var/run
   - name: helm
     image: alpine/helm:3.12.3
     command:
     - cat
     tty: true
+  volumes:
+  - name: docker-socket
+    emptyDir: {}
 
-''' // Agent pod with two containers: Kaniko for build + publish, Helm for deploy. (DnD)
+''' // Agent pod with two containers: Docker for build + publish, Helm for deploy. (DnD)
 		}
 	}
 
@@ -38,12 +41,12 @@ spec:
 		{
 			steps
 			{
-				container('kaniko')
+				container('docker')
 				{
 					sh """
-            			/kaniko/executor --dockerfile=./Question1/WeatherApp/Dockerfile \
-                        --context=/workspace \
-                        --destination=${ECR_REPO}:latest
+                        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}
+                        docker build -t ${ECR_REPO}:latest .
+                        docker push ${ECR_REPO}:latest
             		"""
 				}
 			}
