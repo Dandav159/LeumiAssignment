@@ -45,8 +45,9 @@ spec:
 			{
 				container('docker')
 				{
-					sh "sudo docker build -t ${ECR_REPO} ./Question1/WeatherApp"
-					sh "sudo docker push ${ECR_REPO}"
+					sh "systemctl start docker"
+					sh "docker build -t ${ECR_REPO} ./Question1/WeatherApp"
+					sh "docker push ${ECR_REPO}"
 				}
 			}
 		}
