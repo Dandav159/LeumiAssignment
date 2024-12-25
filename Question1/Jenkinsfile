@@ -11,21 +11,16 @@ spec:
   containers:
   - name: docker
     image: registry.hub.docker.com/library/docker:dind
+    args:
+    - /usr/local/bin/dockerd-entrypoint.sh
     command:
     - cat
     tty: true
-    volumeMounts:
-    - name: docker-sock
-      mountPath: /var/run/docker.sock
   - name: helm
     image: alpine/helm:3.12.3
     command:
     - cat
     tty: true
-  volumes:
-  - name: docker-sock
-    hostPath:
-      path: /var/run/docker.sock
 
 ''' // Agent pod with two containers: Docker for build + publish, Helm for deploy. (DnD)
 		}
