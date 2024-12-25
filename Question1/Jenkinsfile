@@ -9,26 +9,18 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: docker
-    image: docker:dind
-    securityContext:
-      privileged: true
-    env:
-    - name: DOCKER_TLS_CERTDIR
-      value: ""
-    volumeMounts:
-    - name: docker-socket
-      mountPath: /var/lib/docker
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:latest
+    command:
+    - /busybox/cat
+    tty: true
   - name: helm
     image: alpine/helm:3.12.3
     command:
     - cat
     tty: true
-  volumes:
-  - name: docker-socket
-    emptyDir: {}
 
-''' // Agent pod with two containers: Docker for build + publish, Helm for deploy. (DnD)
+''' // Agent pod with two containers: Kaniko for build + publish, Helm for deploy. (DnD)
 		}
 	}
 
@@ -36,7 +28,6 @@ spec:
 	{
 		AWS_REGION = 'eu-central-1'
 		ECR_REPO = "122610493328.dkr.ecr.${AWS_REGION}.amazonaws.com/weatherapp"
-		DOCKER_HOST = 'tcp://localhost:2375'
 	}
 
 	stages
@@ -45,14 +36,12 @@ spec:
 		{
 			steps
 			{
-				container('docker')
+				container('kaniko')
 				{
 					sh """
-                        #aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}
-                        dockerd &
-                        sleep 5
-                        docker build -t ${ECR_REPO}:latest .
-                        docker push ${ECR_REPO}:latest
+            			/kaniko/executor --dockerfile=./Question1/WeatherApp/Dockerfile \
+                        --context=/workspace \
+                        --destination=${ECR_REPO}:latest
             		"""
 				}
 			}
