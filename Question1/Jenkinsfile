@@ -17,17 +17,26 @@ spec:
     command:
     - cat
     tty: true
+    volumeMounts:
+    - name: shared-credentials
+      mountPath: /root/.docker
   - name: buildkit
     image: moby/buildkit:master
     securityContext:
       runAsUser: 0
       privileged: true
     tty: true
+    volumeMounts:
+    - name: shared-credentials
+      mountPath: /root/.docker
   - name: helm
     image: alpine/helm:3.12.3
     command:
     - cat
     tty: true
+  volumes:
+  - name: shared-credentials
+    emptyDir: {}
 
 ''' // Agent pod with two containers: Buildkit for build + publish, Helm for deploy.
 		}
