@@ -13,6 +13,8 @@ spec:
     image: amazon/aws-cli:latest
     securityContext:
       privileged: true
+    command:
+    - cat
     tty: true
   - name: helm
     image: alpine/helm:3.12.3
