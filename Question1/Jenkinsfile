@@ -11,7 +11,7 @@ spec:
   containers:
   - name: aws
     image: amazon/aws-cli:latest
-    runAsUser: root
+    runAsUser: 0
     command:
     - cat
     tty: true
