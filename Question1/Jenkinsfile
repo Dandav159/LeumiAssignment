@@ -11,7 +11,9 @@ spec:
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
-    args: ["/bin/sh", "-c", "while true; do sleep 30; done"]
+    args:
+    - "--context=."
+    - "--destination=122610493328.dkr.ecr.eu-central-1.amazonaws.com/weatherapp:latest"
     tty: true
   - name: helm
     image: alpine/helm:3.12.3
