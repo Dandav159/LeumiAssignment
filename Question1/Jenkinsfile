@@ -5,8 +5,8 @@ pipeline
 		kubernetes
 		{
 			yaml '''
-				apiVersion: v1
-				kind: Pod
+			    apiVersion: v1
+			    kind: Pod
 				spec:
 				  containers:
 				  - name: docker
