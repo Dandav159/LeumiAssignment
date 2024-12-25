@@ -9,13 +9,10 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: docker
-    image: registry.hub.docker.com/library/docker:dind
-    runAsUser: root
-    args:
-    - /usr/local/bin/dockerd-entrypoint.sh
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:latest
     command:
-    - sh
+    - cat
     tty: true
   - name: helm
     image: alpine/helm:3.12.3
@@ -23,7 +20,7 @@ spec:
     - cat
     tty: true
 
-''' // Agent pod with two containers: Docker for build + publish, Helm for deploy. (DnD)
+''' // Agent pod with two containers: Kaniko for build + publish, Helm for deploy. (DnD)
 		}
 	}
 
@@ -39,10 +36,13 @@ spec:
 		{
 			steps
 			{
-				container('docker')
+				container('kaniko')
 				{
-					sh "docker build -t ${ECR_REPO} ./Question1/WeatherApp"
-					sh "docker push ${ECR_REPO}"
+					sh """
+            			/kaniko/executor --dockerfile=./Question1/WeatherApp/Dockerfile \
+                        --context=/workspace \
+                        --destination=${ECR_REPO}:latest
+            		"""
 				}
 			}
 		}
