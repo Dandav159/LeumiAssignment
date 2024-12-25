@@ -11,9 +11,10 @@ spec:
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
-    command:
-    - executor
-    tty: true
+    args:
+    - --dockerfile=./Question1/WeatherApp/Dockerfile
+    - --context=/workspace
+    - --destination=122610493328.dkr.ecr.eu-central-1.amazonaws.com/weatherapp:latest
   - name: helm
     image: alpine/helm:3.12.3
     command:
