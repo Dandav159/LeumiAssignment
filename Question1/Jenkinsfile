@@ -41,7 +41,7 @@ spec:
 				container('buildkit')
 				{
 					sh """
-					    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+					    wget "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
                         unzip awscliv2.zip
                         sudo ./aws/install
 					    aws ecr get-login-password --region region | docker login --username AWS --password-stdin ${ECR_URI}
