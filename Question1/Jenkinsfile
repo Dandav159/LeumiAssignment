@@ -45,7 +45,7 @@ spec:
 				{
 					sh """
 						curl -fsSL https://get.docker.com -o get-docker.sh
-						./get-docker.sh
+						sh ./get-docker.sh
 					    aws ecr get-login-password --region region | docker login --username AWS --password-stdin ${ECR_URI}
             			buildctl build --frontend dockerfile.v0 --local context=./Question1/WeatherApp/ --local dockerfile=./Question1/WeatherApp/ --output type=image,name=${ECR_REPO}:latest,push=true
             		"""
