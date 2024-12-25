@@ -1,0 +1,64 @@
+pipeline 
+{
+	agent 
+	{
+		kubernetes
+		{
+			yaml '''
+				apiVersion: v1
+				kind: Pod
+				spec:
+				  containers:
+				  - name: docker
+				    image: docker:20.10.24
+				    command:
+				    - cat
+				    tty: true
+				    volumeMounts:
+				    - name: docker-sock
+				      mountPath: /var/run/docker.sock
+				  - name: helm
+				    image: alpine/helm:3.12.3
+				    command:
+				    - cat
+				    tty: true
+				  volumes:
+				  - name: docker-sock
+				    hostPath:
+				      path: /var/run/docker.sock
+			''' // Agent pod with two containers: Docker for build + publish, Helm for deploy. (DnD)
+		}
+	}
+
+	environment
+	{
+		AWS_REGION = 'eu-central-1'
+		ECR_REPO = "122610493328.dkr.ecr.${AWS_REGION}.amazonaws.com/weatherapp"
+	}
+
+	stages
+	{
+		stage('Build and Publish')
+		{
+			steps
+			{
+				container('docker')
+				{
+					sh "docker build -t ${ECR_REPO} ./Question1/WeatherApp"
+					sh "docker push ${ECR_REPO}"
+				}
+			}
+		}
+
+		stage('Deploy')
+		{
+			steps
+			{
+				container('helm')
+				{
+					sh "helm upgrade --install weather-app ./Question1/HelmCharts/WeatherAppChart --namespace app"
+				}
+			}
+		}
+	}
+}

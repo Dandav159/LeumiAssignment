@@ -1,0 +1,5 @@
+flask
+gunicorn
+requests
+reverse_geocoder
+country_converter

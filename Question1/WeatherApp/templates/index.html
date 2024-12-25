@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% if location == 'You should be more specific' %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/alternative.css') }}">
+{% else %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endif %}
+
+{% endblock %}
+
+
+{% block body %}
+<h1>{{ location }}</h1>
+
+<form action="{{ url_for('index') }}" method="post"> 
+  <input type="search" id="query" name="q" required>
+  <button>Search</button>
+</form>
+
+{% if location == 'You should be more specific' %}
+<img src="static/world.jpg">
+{% endif %}
+
+{% if days %}
+<div class="container">
+	<table>
+		<tr>
+			<th class="date">Date</th>
+			<th>Day temperature</th>
+			<th>Night temperature</th>
+			<th>Humidity</th>
+		</tr>
+
+		{% for day in days %}
+		<tr>
+			<th>{{ day['datetime'] }}</th>
+			<td>{{ day['tempmax'] }}°C</td>
+			<td>{{ day['tempmin'] }}°C</td>
+			<td>{{ day['humidity'] }}%</td>
+		</tr>
+		{% endfor %}
+		
+	</table>
+</div>
+{% endif %}
+{% endblock %}

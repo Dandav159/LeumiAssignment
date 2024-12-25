@@ -29,7 +29,7 @@ variable "jenkins_controller_ami" {
 
   description = "AMI for jenkins controller"
   type        = string
-  default     = "ami-06eaa0dd9cd67272e"
+  default     = "ami-05fbf1ac8f60540b5"
 }
 
 variable "ingress_rules_jenkins_sg" {
@@ -76,5 +76,5 @@ variable "min_capacity" {
 variable "instance_type" {
   description = "Instance type for the EKS nodes"
   type        = string
-  default     = "t2.medium"
+  default     = "t2.small"
 }

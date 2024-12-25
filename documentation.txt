@@ -1,5 +1,11 @@
 ### Question 1 ###
 
+#Github Setup
+
+1. Created new repository in Github for assignment.
+2. Created access token for pushing to repo.
+3. Pushed python app to repo.
+
 #Jenkins Setup
 
 1. New AWS Region, created EC2 instance.
@@ -7,7 +13,8 @@
 3. Spun Jenkins controller container with volume and restart policy so it runs on boot (below).
 4. Sudo docker run --name jenkins --restart always -p 8080:8080 -v jenkins_home:/var/jenkins_home jenkins/jenkins.
 5. Installed kuberntes plugin.
-6. Create snapshot from instance.
+6. Integrated Github repo with git plugin.
+7. Create snapshot from instance.
 
 #VPC Setup
 
@@ -21,6 +28,20 @@
 3. Created script of cluster setup of Jenkins credentials (so it may deploy and create agents in cluster).
 4. Configured Jenkins cloud with kubernetes plugin (cluster endpoint given as terraform output).
 
+#ECR Setup
+
+1. Created ECR repository.
+2. Pushed WeatherApp image to repo.
+3. aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 122610493328.dkr.ecr.eu-central-1.amazonaws.com/weatherapp.
+
+#Helm Setup
+
+1. Created helm chart for python app.
+2. Deployment and LoadBalancer service that connects to it and exposes on port 443.
+
 #Pipeline
 
-1. Created Jenkinsfile
+1. Created Jenkinsfile (declarative pipeline).
+2. Set up agent as kubernetes pod.
+3. Build and publish stage on Docker container. (might have to install pip and solve auth problems with ecr)
+4. Deploy helm chart on cluster on appropriate namespace.
