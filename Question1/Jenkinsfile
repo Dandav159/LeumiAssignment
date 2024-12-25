@@ -13,9 +13,12 @@ spec:
     image: docker:dind
     securityContext:
       privileged: true
+    env:
+    - name: DOCKER_TLS_CERTDIR
+      value: ""
     volumeMounts:
     - name: docker-socket
-      mountPath: /var/run
+      mountPath: /var/lib/docker
   - name: helm
     image: alpine/helm:3.12.3
     command:
@@ -33,6 +36,7 @@ spec:
 	{
 		AWS_REGION = 'eu-central-1'
 		ECR_REPO = "122610493328.dkr.ecr.${AWS_REGION}.amazonaws.com/weatherapp"
+		DOCKER_HOST = 'tcp://localhost:2375'
 	}
 
 	stages
@@ -45,6 +49,8 @@ spec:
 				{
 					sh """
                         #aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}
+                        dockerd &
+                        sleep 5
                         docker build -t ${ECR_REPO}:latest .
                         docker push ${ECR_REPO}:latest
             		"""
