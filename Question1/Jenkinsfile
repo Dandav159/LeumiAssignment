@@ -27,7 +27,9 @@ spec:
 	environment
 	{
 		AWS_REGION = 'eu-central-1'
-		ECR_REPO = "122610493328.dkr.ecr.${AWS_REGION}.amazonaws.com/weatherapp"
+		ECR_URI = "122610493328.dkr.ecr.${AWS_REGION}.amazonaws.com"
+		IMAGE_NAME = 'weatherapp'
+		ECR_REPO = "${ECR_URI}/${IMAGE_NAME}"
 	}
 
 	stages
@@ -39,6 +41,10 @@ spec:
 				container('buildkit')
 				{
 					sh """
+					    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                        unzip awscliv2.zip
+                        sudo ./aws/install
+					    aws ecr get-login-password --region region | docker login --username AWS --password-stdin ${ECR_URI}
             			buildctl build --frontend dockerfile.v0 --local context=./Question1/WeatherApp/ --local dockerfile=./Question1/WeatherApp/ --output type=image,name=${ECR_REPO}:latest,push=true
             		"""
 				}
