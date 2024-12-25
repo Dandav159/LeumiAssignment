@@ -11,6 +11,7 @@ spec:
   containers:
   - name: docker
     image: registry.hub.docker.com/library/docker:dind
+    runAsUser: root
     args:
     - /usr/local/bin/dockerd-entrypoint.sh
     command:
