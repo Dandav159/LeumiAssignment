@@ -1,0 +1,26 @@
+### Question 1 ###
+
+#Jenkins Setup
+
+1. New AWS Region, created EC2 instance.
+2. Installed Docker on instance.
+3. Spun Jenkins controller container with volume and restart policy so it runs on boot (below).
+4. Sudo docker run --name jenkins --restart always -p 8080:8080 -v jenkins_home:/var/jenkins_home jenkins/jenkins.
+5. Installed kuberntes plugin.
+6. Create snapshot from instance.
+
+#VPC Setup
+
+1. Created terraform resources for VPC with 2 public subnets (assign public IP), internet gateway, routing table, and rt to sn association.
+2. Created terraform resources for EC2 with Jenkins controller snapshot, security group.
+
+#EKS Setup
+
+1. Created terraform resources for EKS, managed node group, relevant roles for cluster and nodes.
+2. Changed cluster context (aws eks update-kubeconfig --region eu-central-1 --name assignment-cluster).
+3. Created script of cluster setup of Jenkins credentials (so it may deploy and create agents in cluster).
+4. Configured Jenkins cloud with kubernetes plugin (cluster endpoint given as terraform output).
+
+#Pipeline
+
+1. Created Jenkinsfile
