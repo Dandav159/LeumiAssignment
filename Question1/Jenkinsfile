@@ -17,6 +17,12 @@ spec:
     command:
     - cat
     tty: true
+  - name: buildkit
+    image: moby/buildkit:master
+    securityContext:
+      runAsUser: 0
+      privileged: true
+    tty: true
   - name: helm
     image: alpine/helm:3.12.3
     command:
@@ -47,9 +53,12 @@ spec:
 						yum update -y
 						amazon-linux-extras install docker
 					    aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_URI}
-            			docker build -t ${ECR_REPO} .
-            			docker push ${ECR_REPO}
             		"""
+				}
+
+				container('buildkit')
+				{
+					sh "buildctl build --frontend dockerfile.v0 --local context=./Question1/WeatherApp/ --local dockerfile=./Question1/WeatherApp/ --output type=image,name=${ECR_REPO}:latest,push=true"
 				}
 			}
 		}
