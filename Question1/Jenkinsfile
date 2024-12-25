@@ -9,15 +9,18 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: kaniko
-    image: gcr.io/kaniko-project/executor:latest
+  - name: buildkit
+    image: moby/buildkit:master
+    securityContext:
+      privileged: true
+    tty: true
   - name: helm
     image: alpine/helm:3.12.3
     command:
     - cat
     tty: true
 
-''' // Agent pod with two containers: Kaniko for build + publish, Helm for deploy. (DnD)
+''' // Agent pod with two containers: Buildkit for build + publish, Helm for deploy.
 		}
 	}
 
@@ -33,12 +36,10 @@ spec:
 		{
 			steps
 			{
-				container('kaniko')
+				container('buildkit')
 				{
 					sh """
-            			/kaniko/executor --dockerfile=./Question1/WeatherApp/Dockerfile \
-                        --context=/workspace \
-                        --destination=${ECR_REPO}:latest
+            			buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=./Question1/WeatherApp/Dockerfile --output type=image,name=${ECR_REPO}:latest,push=true
             		"""
 				}
 			}
