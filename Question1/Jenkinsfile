@@ -4,7 +4,7 @@ pipeline
 	{
 		kubernetes
 		{
-			yaml '''
+yaml '''
 apiVersion: v1
 kind: Pod
 spec:
@@ -27,7 +27,7 @@ spec:
     hostPath:
       path: /var/run/docker.sock
 
-			''' // Agent pod with two containers: Docker for build + publish, Helm for deploy. (DnD)
+''' // Agent pod with two containers: Docker for build + publish, Helm for deploy. (DnD)
 		}
 	}
 
