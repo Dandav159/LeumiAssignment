@@ -10,7 +10,7 @@ kind: Pod
 spec:
   containers:
   - name: aws
-    image: saltycrane/aws-cli-and-docker:latest
+    image: amazon/aws-cli:latest
     securityContext:
       privileged: true
     tty: true
