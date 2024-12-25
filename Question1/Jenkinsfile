@@ -8,10 +8,10 @@ yaml '''
 apiVersion: v1
 kind: Pod
 spec:
+  runAsUser: 0
   containers:
   - name: aws
     image: amazon/aws-cli:latest
-    runAsUser: 0
     command:
     - cat
     tty: true
