@@ -39,7 +39,7 @@ spec:
 				container('buildkit')
 				{
 					sh """
-            			buildctl build --frontend dockerfile.v0 --local context=. --local dockerfile=./Question1/WeatherApp/ --output type=image,name=${ECR_REPO}:latest,push=true
+            			buildctl build --frontend dockerfile.v0 --local context=./Question1/WeatherApp/ --local dockerfile=./Question1/WeatherApp/ --output type=image,name=${ECR_REPO}:latest,push=true
             		"""
 				}
 			}
