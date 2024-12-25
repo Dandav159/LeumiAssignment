@@ -45,7 +45,7 @@ spec:
 				{
 					sh """
 						yum update -y
-						yum install -y docker
+						amazon-linux-extras install docker
 					    aws ecr get-login-password --region region | docker login --username AWS --password-stdin ${ECR_URI}
             			buildctl build --frontend dockerfile.v0 --local context=./Question1/WeatherApp/ --local dockerfile=./Question1/WeatherApp/ --output type=image,name=${ECR_REPO}:latest,push=true
             		"""
