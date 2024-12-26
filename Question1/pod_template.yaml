@@ -2,20 +2,31 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: docker
-    image: docker:20.10.24
+  - name: aws
+    image: amazon/aws-cli:latest
+    securityContext:
+      runAsUser: 0
+      privileged: true
     command:
     - cat
     tty: true
     volumeMounts:
-    - name: docker-sock
-      mountPath: /var/run/docker.sock
+    - name: shared-credentials
+      mountPath: /root/.docker
+  - name: buildkit
+    image: moby/buildkit:master
+    securityContext:
+      runAsUser: 0
+      privileged: true
+    tty: true
+    volumeMounts:
+    - name: shared-credentials
+      mountPath: /root/.docker
   - name: helm
     image: alpine/helm:3.12.3
     command:
     - cat
     tty: true
   volumes:
-  - name: docker-sock
-    hostPath:
-      path: /var/run/docker.sock
+  - name: shared-credentials
+    emptyDir: {}

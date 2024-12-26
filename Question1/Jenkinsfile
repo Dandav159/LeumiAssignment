@@ -4,41 +4,7 @@ pipeline
 	{
 		kubernetes
 		{
-yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: aws
-    image: amazon/aws-cli:latest
-    securityContext:
-      runAsUser: 0
-      privileged: true
-    command:
-    - cat
-    tty: true
-    volumeMounts:
-    - name: shared-credentials
-      mountPath: /root/.docker
-  - name: buildkit
-    image: moby/buildkit:master
-    securityContext:
-      runAsUser: 0
-      privileged: true
-    tty: true
-    volumeMounts:
-    - name: shared-credentials
-      mountPath: /root/.docker
-  - name: helm
-    image: alpine/helm:3.12.3
-    command:
-    - cat
-    tty: true
-  volumes:
-  - name: shared-credentials
-    emptyDir: {}
-
-''' // Agent pod with three containers: AWS for Auth, Buildkit for build + publish, Helm for deploy.
+			yamlFile './Question1/pod_template.yaml' // Agent pod with three containers: AWS for Auth, Buildkit for build + publish, Helm for deploy.
 		}
 	}
 
@@ -61,8 +27,8 @@ spec:
 					sh """
 						yum update -y
 						amazon-linux-extras install docker
-					    aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_URI}
-            		"""
+					  aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_URI}
+          """
 				}
 
 				container('buildkit')
