@@ -1,12 +1,12 @@
-### Question 1 ###
+# Question 1
 
-#Github Setup
+### Github Setup
 
 1. Created new repository in Github for assignment.
 2. Created access token for pushing to repo.
 3. Pushed python app to repo.
 
-#Jenkins Setup
+### Jenkins Setup
 
 1. New AWS Region, created EC2 instance.
 2. Installed Docker on instance.
@@ -16,32 +16,60 @@
 6. Integrated Github repo with git plugin.
 7. Create snapshot from instance.
 
-#VPC Setup
+### VPC Setup
 
 1. Created terraform resources for VPC with 2 public subnets (assign public IP), internet gateway, routing table, and rt to sn association.
 2. Created terraform resources for EC2 with Jenkins controller snapshot, security group.
 
-#EKS Setup
+### EKS Setup
 
 1. Created terraform resources for EKS, managed node group, relevant roles for cluster and nodes.
 2. Changed cluster context (aws eks update-kubeconfig --region eu-central-1 --name assignment-cluster).
 3. Created script of cluster setup of Jenkins credentials (so it may deploy and create agents in cluster).
 4. Configured Jenkins cloud with kubernetes plugin (cluster endpoint given as terraform output).
 
-#ECR Setup
+### ECR Setup
 
 1. Created ECR repository.
 2. Pushed WeatherApp image to repo.
 3. aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 122610493328.dkr.ecr.eu-central-1.amazonaws.com/weatherapp.
 
-#Helm Setup
+### Helm Setup
 
 1. Created helm chart for python app.
 2. Deployment and LoadBalancer service that connects to it and exposes on port 443.
 
-#Pipeline
+### Pipeline
 
 1. Created Jenkinsfile (declarative pipeline).
 2. Set up agent as kubernetes pod.
-3. Build and publish stage on Docker container. (might have to install pip and solve auth problems with ecr)
-4. Deploy helm chart on cluster on appropriate namespace.
+3. AWS container with downloaded docker for ECR authentication.
+4. Buildkit container for building and publishing. (DIND is problematic in k8s clusters 1.24+)
+5. Created common volume for AWS container to share credentials with Buildkit.
+6. Deployed helm chart on cluster on appropriate namespace.
+
+### LoadBalancer
+
+1. Opened port range of NodePort in EKS node sg.
+
+### Deletion
+
+1. Run helm uninstall weather-app --namespace app to delete release and LB
+2. Run terraform destroy to delete infrastructure.
+
+### Recreation (Manual operations)
+
+1. In Terraform folder, terraform apply
+2. Run aws eks update-kubeconfig --region eu-central-1 --name assignment-cluster
+3. Run cluster_setup.sh
+4. Log in Jenkins UI
+5. Configure kubernetes cloud as following:
+	- K8s URL: cluster endpoint given as terraform output.
+	- Jenkins URL: Jenkins instance private IP and port 8080.
+	- Nammespace: jenkins
+	- Disable HTTPS check, enable WebSocket.
+	- Create new credential secret text, paste token outputted from cluster_setup.sh.
+	- Test connection.
+6. Run pipeline job.
+7. Open port range of NodePort in EKS node sg.
+8. Access app in LB URL, port 443.
