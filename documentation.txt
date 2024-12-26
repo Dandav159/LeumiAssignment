@@ -73,3 +73,21 @@
 6. Run pipeline job.
 7. Open port range of NodePort in EKS node sg.
 8. Access app in LB URL, port 443.
+
+---
+
+# Question 5
+
+### EC2 Instance Setup
+
+1. Created new instance.
+2. Installed and enabled apache service.
+3. Created snapshot from instance.
+
+### Terraform
+
+1. Created VPC configuration with 1 public subnet (assign public IP), internet gateway, routing table, and rt to sn association.
+2. Created EC2 instance configuration with apache snapshot.
+3. Created security group allowing http traffic to instance from leumi proxy. (unclear if all traffic or only http should be allowed)
+4. Created elastic IP for the instance.
+5. Created NLB, listener on port 80 (forwards to tg), target group containing instance and instance->tg attachment.

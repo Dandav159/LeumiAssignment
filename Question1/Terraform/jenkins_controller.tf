@@ -7,16 +7,12 @@ resource "aws_instance" "jenkins_controller" {
   subnet_id                   = aws_subnet.public_subnets[0].id
   associate_public_ip_address = true
   key_name                    = "JenkinsKey"
-  vpc_security_group_ids      = [
-    aws_security_group.jenkins_sg.id
-  ]
+  vpc_security_group_ids      = [aws_security_group.jenkins_sg.id]
   tags                        = {
     Name = "JenkinsController"
   }
 
-  depends_on = [
-    aws_subnet.public_subnets
-  ]
+  depends_on = [aws_subnet.public_subnets]
 }
 
 resource "aws_security_group" "jenkins_sg" {
