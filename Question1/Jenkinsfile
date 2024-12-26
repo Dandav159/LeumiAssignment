@@ -38,7 +38,7 @@ spec:
   - name: shared-credentials
     emptyDir: {}
 
-''' // Agent pod with two containers: Buildkit for build + publish, Helm for deploy.
+''' // Agent pod with three containers: AWS for Auth, Buildkit for build + publish, Helm for deploy.
 		}
 	}
 
