@@ -1,6 +1,6 @@
 # Question 1
 
-![Question 1 Diagram](Diagram.png)
+![Question 1 Diagram](./Diagram.png)
 
 ### Github Setup
 	1. Created new repository in Github for assignment.
