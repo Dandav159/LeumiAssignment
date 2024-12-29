@@ -23,7 +23,7 @@
 ### EKS Setup
 	1. Created terraform resources for EKS, managed node group, relevant roles for cluster and nodes.
 	2. Changed cluster context (`aws eks update-kubeconfig --region eu-central-1 --name assignment-cluster`).
-	3. Created script of cluster setup of Jenkins credentials cluster_setup.sh (so it may deploy and create agents in cluster).
+	3. Created terraform resources for k8s namespaces, jenkins service account, relevant role and rolebinding, as well as token for jenkins cloud configuration.
 	4. Configured Jenkins cloud with kubernetes plugin (cluster endpoint given as terraform output).
 
 ### ECR Setup
@@ -54,14 +54,13 @@
 ### Recreation (Manual operations)
 	1. In Terraform folder, `terraform apply`
 	2. Run `aws eks update-kubeconfig --region eu-central-1 --name assignment-cluster` (set context to newly created cluster)
-	3. Run cluster_setup.sh
 	4. Log in Jenkins UI
 	5. Configure kubernetes cloud as following:
 		- K8s URL: cluster endpoint given as terraform output.
 		- Jenkins URL: Jenkins instance private IP and port 8080.
 		- Namespace: jenkins
 		- Disable HTTPS check, enable WebSocket. (simplfies connection of Jenkins controller to agent)
-		- Create new credential secret text, paste token outputted from cluster_setup.sh.
+		- Create new credential secret text, paste token outputted from terraform output.
 		- Test connection.
 	6. Run pipeline job.
 	7. Open port range of NodePort in EKS node sg.
@@ -135,6 +134,6 @@
 ### Terraform
 	1. Created VPC configuration with 1 public subnet (assign public IP), internet gateway, routing table, and rt to sn association.
 	2. Created EC2 instance configuration with apache snapshot.
-	3. Created security group allowing http traffic to instance from leumi proxy. (unclear if all traffic or only http should be allowed)
+	3. Created security group allowing http traffic from leumi proxy. (unclear if all traffic or only http should be allowed)
 	4. Created elastic IP for the instance.
 	5. Created NLB, listener on port 80 (forwards to tg), target group containing instance and instance->tg attachment.

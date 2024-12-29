@@ -4,6 +4,7 @@ resource "aws_lb" "nlb" {
 
   name               = "nlb"
   load_balancer_type = "network"
+  security_groups    = [aws_security_group.leumi_proxy_sg.id]
 
   subnet_mapping {
     subnet_id     = aws_subnet.public_subnet.id
