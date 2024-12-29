@@ -1,5 +1,7 @@
 # Question 1
 
+![Question 1 Diagram](Diagram.png)
+
 ### Github Setup
 	1. Created new repository in Github for assignment.
 	2. Created access token for pushing to repo.
