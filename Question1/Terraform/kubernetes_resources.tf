@@ -59,18 +59,3 @@ resource "kubernetes_cluster_role_binding" "jenkins_role_binding" {
     namespace = kubernetes_namespace.jenkins.metadata[0].name
   }
 }
-
-### Secret token ###
-
-resource "kubernetes_secret" "jenkins_service_account_token" {
-
-  metadata {
-    name      = "jenkins-sa-token"
-    namespace = kubernetes_namespace.jenkins.metadata[0].name
-    annotations = {
-      "kubernetes.io/service-account.name" = kubernetes_service_account.jenkins.metadata[0].name
-    }
-  }
-
-  type = "kubernetes.io/service-account-token"
-}

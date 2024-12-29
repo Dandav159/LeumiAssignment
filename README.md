@@ -60,7 +60,7 @@
 		- Jenkins URL: Jenkins instance private IP and port 8080.
 		- Namespace: jenkins
 		- Disable HTTPS check, enable WebSocket. (simplfies connection of Jenkins controller to agent)
-		- Create new credential secret text, paste token outputted from terraform output.
+		- Create new credential secret text, paste token outputted from `kubectl create token jenkins --namespace jenkins`.
 		- Test connection.
 	6. Run pipeline job.
 	7. Open port range of NodePort in EKS node sg.
